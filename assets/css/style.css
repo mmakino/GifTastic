@@ -1,0 +1,20 @@
+* {
+  box-sizing: border-box;
+}
+
+header {
+  display: block;
+}
+
+.btn {
+  margin: 0.2em 0.2em;
+}
+
+section {
+  display: inline-block;
+}
+
+aside {
+  float: right;
+  width: 35%;
+}
