@@ -34,7 +34,10 @@
   </section>
 
   <script>
-    $(document).ready(runTheApp);
+    $(document).ready(() => {
+      let gifTastic = new GifTastic();
+      gifTastic.run();
+    });
   </script>
 </body>
 
