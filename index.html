@@ -18,20 +18,20 @@
     <!-- topic buttons are to be populated here -->
   </header>
 
-  <section id="img-section">
-    <!-- fetched images are to be populated here -->
-  </section>
-
   <aside>
     <!-- an input box and submit button for adding a topic -->
     <form>
-      <div class="form-group mr-3">
-        <label for="addTopic">Add an animal</label>
+      <div class="form-group mr-3 float-right">
+        <label for="addTopic" class="m-0">Add an animal</label>
         <input type="topic" class="form-control" id="new-topic">
-        <button type="submit" class="btn btn-info btn-sm" id="add-topic">Submit</button>
+        <button type="submit" class="btn btn-info btn-sm mt-1" id="add-topic">Submit</button>
       </div>
     </form>
   </aside>
+
+  <section id="img-section">
+    <!-- fetched images are to be populated here -->
+  </section>
 
   <script>
     $(document).ready(runTheApp);

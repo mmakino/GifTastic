@@ -16,7 +16,7 @@ class Topics {
   //
   defaultTopics() {
     return ['dog', 'cat', 'rabbit', 'mouse', 'bear', 'tiger', 'elephant',
-      'giraffe', 'lion', 'penguin', 'flamingo', 'sea lion', 'bold eagle'
+      'giraffe', 'lion', 'penguin', 'flamingo', 'sea lion', 'bald eagle'
     ]
   }
 
@@ -28,7 +28,8 @@ class Topics {
     let button = $("<button>");
     button.attr("topic", name);
     button.attr("type", "button");
-    button.addClass("btn btn-info btn-sm topic");
+    button.addClass("btn btn-info btn-sm m-1");
+    button.addClass("search-topic");
     button.text(name);
 
     return button;
@@ -38,6 +39,7 @@ class Topics {
   // Populate the header with buttons of topics
   //
   populateButtons() {
+    $("#topic-buttons").empty();
     this.topics.forEach((topic) => {
       $("#topic-buttons").append(this.aNewButton(topic));
     });
@@ -51,9 +53,16 @@ class Topics {
     event.preventDefault();
     let newTopic = $("#new-topic").val().trim();
 
-    if (!self.topics.includes(newTopic.toLowerCase())) {
+    if (!self.topics.includes(newTopic.toLowerCase()) && newTopic.length !== 0) {
       self.topics.push(newTopic);
-      $("#topic-buttons").append(self.aNewButton(newTopic));
+      let button = self.aNewButton(newTopic);
+      // button.on("click", giphy, function(event) {
+      //   let topic = $(this).attr("topic");
+      //   giphy.fetchGIF(topic, 10);
+      // });
+      $("#topic-buttons").append(button);
+      $("#new-topic").val("");
+
       return true;
     }
 
@@ -74,12 +83,77 @@ class Giphy {
   //
   // Construct a search query string
   //
-  searchQuery(item, limit = 10) {
+  queryString(item, limit = 10) {
     return this.url + this.search + 
     [`api_key=${this.apiKey}`,
-      `q=${item}`,
+      `q=${item.replace(/\s+/g, '+')}`,
       `limit=${limit}`
     ].join('&');
+  }
+
+  //
+  // Retrieve images from Giphy
+  //
+  fetchGIF(item, numImages = 10) {
+    let queryURL = this.queryString(item, numImages);
+    console.log('query string: ' + queryURL);
+
+    $.ajax({
+      url: this.queryString(item, numImages),
+      method: 'GET'
+    }).then((response) => {
+      this.displayImages(response);
+    });
+  }
+
+  //
+  // Display returned images to #img-section
+  //
+  displayImages(response, clearBefore = true) {
+    let records = response.data;
+    console.log(records);
+
+    if (clearBefore) {
+      $("#img-section").empty();
+    }
+    records.forEach((item) => { 
+      $("#img-section").prepend(this.aNewImgElem(item));
+    });  
+    $(".gif").on("click", this.toggleImg);
+  }
+
+  //
+  // Construct a new image element
+  //
+  aNewImgElem(item) {
+    let div = $('<div>');
+    let h3 = $('<h3>');
+    let img = $('<img>');
+
+    div.addClass('image-item float-left');
+    h3.text(`Rating: ${item.rating.toUpperCase()}`);
+    img.attr('src', item.images.fixed_height_still.url);
+    img.attr('still-gif', item.images.fixed_height_still.url);
+    img.attr('animate-gif', item.images.fixed_height.url);
+    img.attr('alt', 'animal image');
+    img.addClass('gif rounded float-left m-1');
+    div.append(h3).append(img);
+
+    return div;
+  }
+
+  //
+  // Toggle btw still and animated images
+  //
+  toggleImg() {
+    let currentImg = $(this).attr('src');
+    
+    if (currentImg === $(this).attr('still-gif')) {
+      $(this).attr('src', $(this).attr('animate-gif'));
+    }
+    else if (currentImg === $(this).attr('animate-gif')) {
+      $(this).attr('src', $(this).attr('still-gif'));
+    }
   }
 }
 
@@ -87,15 +161,14 @@ class Giphy {
 // Run GifTastic app
 //
 function runTheApp() {
-  let topics = new Topics();
   let giphy = new Giphy();
+  let topics = new Topics();
 
   topics.populateButtons();
 
-  $(".topic").on("click", function () {
-    var topic = $(this).attr("topic");
-    alert(topic);
+  $(".search-topic").on("click", function() {
+    let topic = $(this).attr("topic");
+    giphy.fetchGIF(topic, 10);
   });
-
   $("#add-topic").on("click", topics, topics.addTopic);
 }

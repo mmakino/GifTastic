@@ -6,15 +6,12 @@ header {
   display: block;
 }
 
-.btn {
-  margin: 0.2em 0.2em;
-}
-
 section {
-  display: inline-block;
+  width: 80%;
 }
 
-aside {
-  float: right;
-  width: 35%;
+h3 {
+  font-size: 0.8em;
+  margin: 0em;
 }
+
