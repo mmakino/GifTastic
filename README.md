@@ -1,5 +1,6 @@
 # GifTastic
-Use the GIPHY API to make a dynamic web page that populates with gifs.
+* Use the GIPHY API to make a dynamic web page that populates with gifs.
+* https://mmakino.github.io/GifTastic/
 
 ### Overview
 
