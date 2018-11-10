@@ -183,14 +183,10 @@ class Giphy {
                 H${item.images.original.height}`);
     meta3.text(`Rating: ${item.rating.toUpperCase()}`);
     icon.addClass("fa fa-download").attr("aria-hidden", "true");
-    // link.attr("href", item.images.original.url);
     link.attr("href", item.images.fixed_height_still.url);
-    link.attr("download", "giphy.gif");
-    link.attr("target", "_blank");
+    link.attr("download", "");
     link.append(icon);
     meta3.append(link);
-    // icon.bind("click", () => { window.open(item.images.original.url); });       
-    // meta3.append(icon);
     img.attr('src', item.images.fixed_height_still.url);
     img.attr('still-gif', item.images.fixed_height_still.url);
     img.attr('animate-gif', item.images.fixed_height.url);
