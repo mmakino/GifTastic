@@ -4,7 +4,45 @@
 */
 
 //
-// Theme Buttons
+// A main app wrapper class
+//
+class GifTastic {
+  constructor(maxNumRec = 10) {
+    this.giphy = new Giphy();
+    this.theme = new Theme();
+    this.topic = ""; // current topic
+    this.limit = maxNumRec;
+  }
+
+  //
+  // Run GifTastic app
+  //
+  run() {
+    this.theme.populateButtons();
+    $("#add-topic").on("click", this, this.theme.addTopic);
+    $(".search-topic").on("click", this, this.searchTopic);
+  }
+
+  //
+  // search-topic button event handler to query Giphy 
+  //
+  searchTopic(event) {
+    let self = event.data;
+    let topic = $(this).attr("topic");
+    let isSameTopic = (topic === self.topic) ? true : false;
+
+    if (topic !== self.topic) {
+      self.topic = topic;
+      self.offset = 0;
+    }
+
+    console.log("Search Topic: " + self.topic);
+    self.giphy.fetchGIF(self.topic, self.limit, !isSameTopic);
+  }
+}
+
+//
+// A class for buttons
 //
 class Theme {
   constructor() {
@@ -75,22 +113,31 @@ class Giphy {
     this.url = 'https://api.giphy.com/';
     this.search = 'v1/gifs/search?';
     this.apiKey = 'GQKXP5s0SrfYcb9Q2OjQRd6CCHUL19qj';
+    this.offset = 0;  // offset for fetching images
   }
 
   //
   // Construct a search query string
   //
   queryString(item, limit = 10) {
-    return this.url + this.search + [`api_key=${this.apiKey}`,
+    let stmt = this.url + this.search;
+
+    stmt += [
+      `api_key=${this.apiKey}`,
       `q=${item.replace(/\s+/g, '+')}`,
+      `offset=${this.offset}`,
       `limit=${limit}`
     ].join('&');
+
+    this.offset += limit;
+
+    return stmt;
   }
 
   //
   // Retrieve images from Giphy
   //
-  fetchGIF(item, numImages = 10) {
+  fetchGIF(item, numImages = 10, clearBefore = true) {
     let queryURL = this.queryString(item, numImages);
 
     console.log('query string: ' + queryURL);
@@ -99,7 +146,7 @@ class Giphy {
       url: this.queryString(item, numImages),
       method: 'GET'
     }).then((response) => {
-      this.displayImages(response);
+      this.displayImages(response, clearBefore);
     });
   }
 
@@ -110,7 +157,6 @@ class Giphy {
     let records = response.data;
 
     // console.log(records);
-
     if (clearBefore) {
       $("#img-section").empty();
     }
@@ -154,33 +200,3 @@ class Giphy {
   }
 }
 
-//
-// A main app wrapper class
-//
-class GifTastic {
-  constructor() {
-    this.giphy = new Giphy();
-    this.theme = new Theme();
-  }
-
-  //
-  // Run GifTastic app
-  //
-  run() {
-    this.theme.populateButtons();
-    $("#add-topic").on("click", this, this.theme.addTopic);
-    $(".search-topic").on("click", this, this.searchTopic);
-  }
-
-  //
-  // search-topic button event handler to query Giphy 
-  //
-  searchTopic(event) {
-    let topic = $(this).attr("topic");
-    let self = event.data;
-
-    console.log("Search Topic: " + topic);
-    self.giphy.fetchGIF(topic, 10);
-  }
-
-}

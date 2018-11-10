@@ -15,3 +15,12 @@ h3 {
   margin: 0em;
 }
 
+@media screen and (max-width: 640px) {
+  section {
+    width: 100vw;
+  }
+
+  .form-group {
+    width: 90vw;
+  }
+}
