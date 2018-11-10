@@ -13,6 +13,12 @@ section {
 h3 {
   font-size: 0.8em;
   margin: 0em;
+  text-indent: 2%;
+}
+
+.fa-download {
+  float: right;
+  margin-right: 7%;
 }
 
 @media screen and (max-width: 640px) {

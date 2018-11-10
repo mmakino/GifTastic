@@ -171,17 +171,33 @@ class Giphy {
   //
   aNewImgElem(item) {
     let div = $('<div>');
-    let h3 = $('<h3>');
     let img = $('<img>');
+    let meta1 = $('<h3>');
+    let meta2 = $('<h3>');
+    let meta3 = $('<h3>');
+    let icon = $("<i>");
+    let link = $("<a>"); // for html5 download
 
-    div.addClass('image-item float-left');
-    h3.text(`Rating: ${item.rating.toUpperCase()}`);
+    meta1.text(`Title: ${item.title}`);
+    meta2.text(`Dimension: W${item.images.original.width} x
+                H${item.images.original.height}`);
+    meta3.text(`Rating: ${item.rating.toUpperCase()}`);
+    icon.addClass("fa fa-download").attr("aria-hidden", "true");
+    // link.attr("href", item.images.original.url);
+    link.attr("href", item.images.fixed_height_still.url);
+    link.attr("download", "giphy.gif");
+    link.attr("target", "_blank");
+    link.append(icon);
+    meta3.append(link);
+    // icon.bind("click", () => { window.open(item.images.original.url); });       
+    // meta3.append(icon);
     img.attr('src', item.images.fixed_height_still.url);
     img.attr('still-gif', item.images.fixed_height_still.url);
     img.attr('animate-gif', item.images.fixed_height.url);
     img.attr('alt', 'animal image');
     img.addClass('gif rounded float-left m-1');
-    div.append(h3).append(img);
+    div.addClass('image-item float-left');
+    div.append(meta1).append(meta2).append(meta3).append(img);
 
     return div;
   }
