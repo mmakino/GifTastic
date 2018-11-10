@@ -17,3 +17,17 @@ By making use of the GIPHY API, make a dynamic web page that populates with gifs
   ``` 
   <a href="image.gif" download>  
   ```
+
+### Repository
+```
++--- homework.md
++--- index.html
++--- README.md
++--- assets
+    +--- css
+    |   +--- reset.css
+    |   +--- style.css
+    +--- images
+    +--- javascript
+        +--- app.js
+```
